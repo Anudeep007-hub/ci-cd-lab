@@ -1,0 +1,33 @@
+on: 
+  push: 
+    branches: [main] 
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node: [14, 16, 18]
+
+    name: Node ${{ matrix.node }} Test
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+
+      - run: npm install
+
+      - run: npm test
+
+      - name: Upload Test Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-report
+          path: .
